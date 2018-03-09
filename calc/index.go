@@ -4,6 +4,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gopherjs/vecty"
 
@@ -15,6 +16,7 @@ import (
 )
 
 func handler(act dispatcher.Action) {
+	log.Printf("%#v", act)
 	switch v := act.(type) {
 	default:
 		log.Println("unknown action:", v)
@@ -63,11 +65,9 @@ func handler(act dispatcher.Action) {
 		case '*':
 		case '/':
 		}
-		if store.State.Operator == rune(0) {
-			store.State.Operator = v.Char
-			store.State.LastInput = store.State.NowInput
-			store.State.NowInput = "0"
-		}
+		store.State.Operator = v.Char
+		store.State.LastInput = store.State.NowInput
+		store.State.NowInput = "0"
 		return
 	case actions.Equal:
 		if store.State.Operator != rune(0) {
@@ -100,6 +100,10 @@ func handler(act dispatcher.Action) {
 				store.State.LastInput = store.State.NowInput
 			}
 			store.State.NowInput = strconv.FormatFloat(result, 'G', -1, 64)
+			time.AfterFunc(30*time.Millisecond, func() {
+				store.State.LastInput = store.State.NowInput
+				store.State.NowInput = "0"
+			})
 		}
 	}
 	router.Rerender()

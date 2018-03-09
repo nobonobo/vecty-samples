@@ -20,7 +20,7 @@ func (c *TopView) Render() vecty.ComponentOrHTML {
 	clearLabel := "Ｃ"
 	clearAll := false
 	if c.State.IsZero() {
-		clearLabel = "ＡＣ"
+		clearLabel = "AC"
 		clearAll = true
 	}
 	return elem.Body(
