@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -93,7 +94,12 @@ func handler(act dispatcher.Action) {
 			case '*':
 				result = last * now
 			case '/':
-				result = last / now
+				if now != 0 {
+					result = math.Round(last / now)
+				} else {
+					store.State.NowInput = "ERR"
+					break
+				}
 			}
 			if store.State.Modified {
 				store.State.Modified = false
